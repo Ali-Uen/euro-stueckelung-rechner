@@ -1,4 +1,6 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import {
   Breakdown,
   DiffItem,
@@ -21,12 +23,29 @@ export class LocalDenominationService implements DenominationStrategy {
   }
 }
 
-// Platzhalter für den späteren HTTP-basierten Backend-Aufruf.
+// Backend-Aufruf.
 @Injectable({ providedIn: 'root' })
 export class RemoteDenominationService implements DenominationStrategy {
-  async denominate(_: number): Promise<Breakdown> {
-    throw new Error('Backend mode is not implemented yet');
+  private readonly http = inject(HttpClient);
+
+  async denominate(totalInCents: number): Promise<Breakdown> {
+    const apiResult = await firstValueFrom(
+      this.http.post<ApiBreakdown>('http://localhost:8080/api/denominate', { totalInCents })
+    );
+
+    return {
+      totalInCents: apiResult.totalInCents,
+      items: apiResult.items.map(({ denominationInCents, count }) => ({
+        denomination: denominationInCents as Breakdown['items'][number]['denomination'],
+        count,
+      })),
+    };
   }
+}
+
+interface ApiBreakdown {
+  totalInCents: number;
+  items: Array<{ denominationInCents: number; count: number }>;
 }
 
 // Rückgabewert, den der Service nach jeder Berechnung liefert.
@@ -87,8 +106,7 @@ export class DenominationService {
         diff: this.diff(),
       };
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Unexpected failure';
+      const message = this.resolveErrorMessage(error);
       this.lastError.set(message);
       throw error;
     } finally {
@@ -102,5 +120,23 @@ export class DenominationService {
     }
 
     return this.remote;
+  }
+
+  private resolveErrorMessage(error: unknown): string {
+  if (error instanceof HttpErrorResponse) {
+    if (error.error?.message) {
+      return error.error.message;
+    }
+    if (error.status === 0) {
+      return 'Backend ist momentan nicht erreichbar.';
+    }
+    return `Serverfehler (${error.status})`;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return 'Unerwarteter Fehler';
   }
 }
