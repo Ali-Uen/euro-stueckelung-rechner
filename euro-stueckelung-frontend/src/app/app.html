@@ -93,6 +93,9 @@
               {{ item.delta > 0 ? '+' : '' }}{{ item.delta }}
             </td>
           </tr>
+          <tr *ngIf="diff().length === 0">
+            <td colspan="2">Keine Differenzen verf&uuml;gbar.</td>
+          </tr>
         </tbody>
       </table>
     </article>

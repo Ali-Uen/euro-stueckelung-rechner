@@ -76,6 +76,7 @@ export function computeBreakdown(totalInCents: number): Breakdown {
 // Vergleicht zwei Breakdowns und liefert die Veränderung je Denomination.
 export function computeDiff(previous: Breakdown | null, current: Breakdown): DiffItem[] {
   const registry = new Map<EuroDenomination, number>();
+  const used = new Set<EuroDenomination>();
 
   for (const denomination of EURO_DENOMINATIONS) {
     registry.set(denomination, 0);
@@ -83,11 +84,13 @@ export function computeDiff(previous: Breakdown | null, current: Breakdown): Dif
 
   if (previous) {
     for (const item of previous.items) {
+      used.add(item.denomination);
       registry.set(item.denomination, (registry.get(item.denomination) ?? 0) - item.count);
     }
   }
 
   for (const item of current.items) {
+    used.add(item.denomination);
     registry.set(item.denomination, (registry.get(item.denomination) ?? 0) + item.count);
   }
 
@@ -96,5 +99,5 @@ export function computeDiff(previous: Breakdown | null, current: Breakdown): Dif
       denomination,
       delta: registry.get(denomination) ?? 0,
     }))
-    .filter(({ delta }) => delta !== 0);
+    .filter(({ denomination }) => used.has(denomination));
 }
