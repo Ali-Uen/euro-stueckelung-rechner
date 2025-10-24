@@ -1,5 +1,6 @@
 package com.example.euro_stueckelung_backend.controller;
 
+import com.example.euro_stueckelung_backend.model.DiffItem;
 import com.example.euro_stueckelung_backend.model.Breakdown;
 import com.example.euro_stueckelung_backend.model.BreakdownItem;
 import com.example.euro_stueckelung_backend.service.DenominationService;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,12 +31,17 @@ class DenominationControllerTest {
     private DenominationService denominationService;
 
     @Test
-    @DisplayName("Liefert Breakdown-Response für gültigen Cent-Betrag")
+    @DisplayName("Liefert Breakdown-Response für gültigen Cent-Betrag inklusive Diff")
     void shouldReturnBreakdownForValidRequest() throws Exception {
         Breakdown breakdown = new Breakdown(23423,
                 List.of(new BreakdownItem(20000, 1),
                         new BreakdownItem(2000, 1)));
+        List<DiffItem> diff = List.of(
+        new DiffItem(20000, 1),
+        new DiffItem(2000, 1)
+        );
         when(denominationService.denominate(23423L)).thenReturn(breakdown);
+        when(denominationService.computeDiff(null, breakdown)).thenReturn(diff);
 
         mockMvc.perform(post("/api/denominate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -46,7 +51,11 @@ class DenominationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalInCents").value(23423))
                 .andExpect(jsonPath("$.items[0].denominationInCents").value(20000))
-                .andExpect(jsonPath("$.items[0].count").value(1));
+                .andExpect(jsonPath("$.items[0].count").value(1))
+                .andExpect(jsonPath("$.diff[0].denominationInCents").value(20000))
+                .andExpect(jsonPath("$.diff[0].delta").value(1))
+                .andExpect(jsonPath("$.diff[1].denominationInCents").value(2000))
+                .andExpect(jsonPath("$.diff[1].delta").value(1));
     }
 
     @Test

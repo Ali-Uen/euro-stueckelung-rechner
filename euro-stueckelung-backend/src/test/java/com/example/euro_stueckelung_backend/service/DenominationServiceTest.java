@@ -1,9 +1,12 @@
 package com.example.euro_stueckelung_backend.service;
 import com.example.euro_stueckelung_backend.model.Breakdown;
 import com.example.euro_stueckelung_backend.model.BreakdownItem;
+import com.example.euro_stueckelung_backend.model.DiffItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import java.util.List;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -109,5 +112,30 @@ class DenominationServiceTest {
 
         assertThatThrownBy(() -> denominationService.denominate((String) null))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+    @Test
+    @DisplayName("Berechnet Differenzen zwischen vorherigem und aktuellem Breakdown")
+    void shouldComputeDiffBetweenBreakdowns() {
+        Breakdown previous = new Breakdown(
+                2050,
+                List.of(
+                        new BreakdownItem(2000, 1),
+                        new BreakdownItem(50, 1)
+                )
+        );
+        Breakdown current = new Breakdown(
+                2100,
+                List.of(
+                        new BreakdownItem(2000, 1),
+                        new BreakdownItem(100, 1)
+                )
+        );
+
+        assertThat(denominationService.computeDiff(previous, current))
+                .containsExactly(
+                        new DiffItem(2000, 0),
+                        new DiffItem(100, 1),
+                        new DiffItem(50, -1)
+                );
     }
 }
