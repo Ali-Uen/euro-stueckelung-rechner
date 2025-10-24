@@ -1,8 +1,12 @@
 package com.example.euro_stueckelung_backend.dto;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 /**
  * Repräsentiert den Request-Body des Denomination-Endpunkts.
@@ -13,7 +17,11 @@ public record DenominationRequest(
         String amount,
 
         @PositiveOrZero(message = "Der Betrag darf nicht negativ sein.")
-        Long totalInCents
+        Long totalInCents,
+        
+        @Valid
+        @Size(max = 20, message = "Zu viele Einträge im vorherigen Breakdown.")
+        List<BreakdownDto> previousBreakdown
 ) {
 
     @AssertTrue(message = "Es muss entweder amount oder totalInCents angegeben werden.")

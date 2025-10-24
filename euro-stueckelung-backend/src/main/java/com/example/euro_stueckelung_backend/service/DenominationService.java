@@ -2,10 +2,17 @@ package com.example.euro_stueckelung_backend.service;
 
 import com.example.euro_stueckelung_backend.model.Breakdown;
 import com.example.euro_stueckelung_backend.model.BreakdownItem;
+import com.example.euro_stueckelung_backend.model.DiffItem;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -81,6 +88,36 @@ public class DenominationService {
         long result = euroPart * 100 + centPart;
         validateAmount(result);
         return result;
+    }
+
+    public List<DiffItem> computeDiff(Breakdown previous, Breakdown current) {
+        if (current == null) {
+            throw new IllegalArgumentException("current breakdown must not be null");
+        }
+
+        Map<Integer, Integer> registry = new LinkedHashMap<>();
+        Set<Integer> used = new HashSet<>();
+
+        for (int denomination : EURO_DENOMINATIONS) {
+            registry.put(denomination, 0);
+        }
+
+        if (previous != null) {
+            for (BreakdownItem item : previous.items()) {
+                used.add(item.denominationInCents());
+                registry.compute(item.denominationInCents(), (d, val) -> (val == null ? 0 : val) - item.count());
+            }
+        }
+
+        for (BreakdownItem item : current.items()) {
+            used.add(item.denominationInCents());
+            registry.compute(item.denominationInCents(), (d, val) -> (val == null ? 0 : val) + item.count());
+        }
+
+        return Arrays.stream(EURO_DENOMINATIONS)
+                .mapToObj(denom -> new DiffItem(denom, registry.get(denom)))
+                .filter(diff -> used.contains(diff.denominationInCents()))
+                .toList();
     }
 
     private void validateAmount(long totalInCents) {

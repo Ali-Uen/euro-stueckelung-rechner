@@ -2,6 +2,7 @@ package com.example.euro_stueckelung_backend.dto;
 
 import com.example.euro_stueckelung_backend.model.Breakdown;
 import com.example.euro_stueckelung_backend.model.BreakdownItem;
+import com.example.euro_stueckelung_backend.model.DiffItem;
 
 import java.util.List;
 
@@ -10,10 +11,12 @@ import java.util.List;
  */
 public record DenominationResponse(
         long totalInCents,
-        List<BreakdownItem> items
-) {
+        List<BreakdownItem> items,
+        List<DiffItem> diff
+) 
+{
 
-    public static DenominationResponse from(Breakdown breakdown) {
-        return new DenominationResponse(breakdown.totalInCents(), breakdown.items());
+    public static DenominationResponse from(Breakdown breakdown, List<DiffItem> diff) {
+        return new DenominationResponse(breakdown.totalInCents(), breakdown.items(), diff);
     }
 }
