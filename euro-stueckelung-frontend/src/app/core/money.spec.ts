@@ -66,7 +66,9 @@ describe('money utils', () => {
         { denomination: 1000, delta: 1 },
         { denomination: 500, delta: -1 },
         { denomination: 200, delta: 2 },
+        { denomination: 20, delta: 0 },
         { denomination: 10, delta: -1 },
+        { denomination: 2, delta: 0 },
         { denomination: 1, delta: 1 },
       ]);
     });
