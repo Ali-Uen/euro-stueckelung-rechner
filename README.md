@@ -25,7 +25,7 @@ Du kannst eine Live-Demo für dieses Projekt [hier sehen](https://euro-stueckelu
 ### Voraussetzungen
 
 - [Node.js](https://nodejs.org/) >= 20.19.0 (via [Volta](https://volta.sh/))
-- [npm](https://www.npmjs.com/) >= 10.8.2
+- [npm](https://www.npmjs.com/) >= 10.8.2 (via [Volta](https://volta.sh/))
 - [Java 21 (Temurin)](https://adoptium.net/)
 - [Maven Wrapper](https://maven.apache.org/wrapper/)
 

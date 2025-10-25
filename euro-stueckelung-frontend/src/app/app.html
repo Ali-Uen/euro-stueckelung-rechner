@@ -1,9 +1,8 @@
 <main class="app">
   <header class="app__header">
-    <h1>Euro-St&uuml;ckelung Rechner</h1>
+    <h1>Euro-Stückelung Rechner</h1>
     <p>
-      Berechne die minimale Anzahl an Scheinen und M&uuml;nzen f&uuml;r einen Betrag und vergleiche das Ergebnis mit der
-      letzten Ausgabe.
+      Berechnet die Stückelung eines eingegebenen Euro-Betrags in Scheine und Münzen, zeigt die Differenz zur letzten Ausgabe an und blendet beim Zurücksetzen alle Ergebnisse wieder aus.
     </p>
   </header>
 
@@ -29,7 +28,7 @@
             [checked]="currentMode() === 'frontend'"
             (change)="changeMode('frontend')"
           />
-          Frontend (TypeScript)
+          Frontend
         </label>
         <label>
           <input
@@ -39,18 +38,18 @@
             [checked]="currentMode() === 'backend'"
             (change)="changeMode('backend')"
           />
-          Backend (Spring Boot)
+          Backend
         </label>
       </div>
 
       <div class="app__form-actions">
         <button type="submit" [disabled]="isProcessing()">Berechnen</button>
-        <button type="button" class="secondary" (click)="reset()">Zur&uuml;cksetzen</button>
+        <button type="button" class="secondary" (click)="reset()">Zurücksetzen</button>
       </div>
     </form>
 
     <div class="app__status">
-      <p *ngIf="isProcessing()">Berechnung l&auml;uft &hellip;</p>
+      <p *ngIf="isProcessing()">Berechnung läuft &hellip;</p>
       <p *ngIf="inputError() as msg" class="status status--error">{{ msg }}</p>
       <p *ngIf="error() as serverError" class="status status--error">{{ serverError }}</p>
     </div>
@@ -58,11 +57,11 @@
 
   <section class="app__results">
     <article>
-      <h2>Neue St&uuml;ckelung</h2>
+      <h2>Neue Stückelung</h2>
       <table>
         <thead>
           <tr>
-            <th>Schein/M&uuml;nze</th>
+            <th>Schein/Münze</th>
             <th>Anzahl</th>
           </tr>
         </thead>
@@ -81,7 +80,7 @@
       <table>
         <thead>
           <tr>
-            <th>Schein/M&uuml;nze</th>
+            <th>Schein/Münze</th>
             <th>Differenz</th>
           </tr>
         </thead>
@@ -94,7 +93,7 @@
             </td>
           </tr>
           <tr *ngIf="diff().length === 0">
-            <td colspan="2">Keine Differenzen verf&uuml;gbar.</td>
+            <td colspan="2">Keine Differenzen verfügbar.</td>
           </tr>
         </tbody>
       </table>
@@ -104,7 +103,7 @@
   <ng-template #noBreakdown>
     <tbody>
       <tr>
-        <td colspan="2">Noch keine Berechnung durchgef&uuml;hrt.</td>
+        <td colspan="2">Noch keine Berechnung durchgeführt.</td>
       </tr>
     </tbody>
   </ng-template>
@@ -112,7 +111,7 @@
   <ng-template #noDiff>
     <tbody>
       <tr>
-        <td colspan="2">Keine Differenzen verf&uuml;gbar.</td>
+        <td colspan="2">Keine Differenzen verfügbar.</td>
       </tr>
     </tbody>
   </ng-template>
