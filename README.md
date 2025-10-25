@@ -2,6 +2,9 @@
 
 Willkommen zum Euro-Stückelungs-Rechner, einer Webanwendung, die für einen eingegebenen Betrag die Stückelung in Euro-Scheine und -Münzen berechnet. Dabei werden stets die größten verfügbaren Scheine und Münzen zuerst verwendet, um die Anzahl der benötigten Geldstücke zu minimieren. Nach jeder Berechnung wird angezeigt, wie sich die Stückelung im Vergleich zur vorherigen Eingabe verändert hat. Die Berechnung kann wahlweise im Frontend (Angular) oder Backend (Spring Boot) erfolgen und ist über die Oberfläche umschaltbar.
 
+## Live Demo
+
+Du kannst eine Live-Demo für dieses Projekt [hier sehen](https://euro-stueckelung-rechner.vercel.app/).
 ## Technologie-Stack
 
 ### Frontend
