@@ -4,10 +4,21 @@ import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 import { CalculationMode, DenominationService } from './core/denomination.service';
 import { BreakdownItem, DiffItem, formatCentsToEuro, parseAmountToCents } from './core/money';
 
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatToolbarModule, MatCardModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatButtonModule, MatProgressBarModule, MatListModule, MatIconModule, MatChipsModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
