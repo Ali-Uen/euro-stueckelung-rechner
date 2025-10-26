@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   Breakdown,
   DiffItem,
@@ -29,8 +30,9 @@ export class RemoteDenominationService implements DenominationStrategy {
   private readonly http = inject(HttpClient);
 
   async denominate(totalInCents: number): Promise<Breakdown> {
+    const baseUrl = environment.apiBaseUrl.replace(/\/$/, '');
     const apiResult = await firstValueFrom(
-      this.http.post<ApiBreakdown>('http://localhost:8080/api/denominate', { totalInCents })
+      this.http.post<ApiBreakdown>(`${baseUrl}/api/denominate`, { totalInCents })
     );
 
     return {
