@@ -14,11 +14,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTableModule } from '@angular/material/table';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatToolbarModule, MatCardModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatButtonModule, MatProgressBarModule, MatListModule, MatIconModule, MatChipsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatToolbarModule, MatCardModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatButtonModule, MatProgressBarModule, MatListModule, MatIconModule, MatChipsModule, MatTableModule, MatSlideToggleModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -40,6 +42,13 @@ export class App {
 
   protected readonly formatEuro = formatCentsToEuro;
 
+  protected readonly darkMode = signal(false);
+
+  protected toggleDarkMode(): void {
+    this.darkMode.set(!this.darkMode());
+    document.body.classList.toggle('dark-theme', this.darkMode());
+  }
+
   protected changeMode(mode: CalculationMode) {
     this.service.setMode(mode);
   }
@@ -49,7 +58,7 @@ export class App {
       this.inputError.set('Bitte einen Betrag eingeben.');
       return;
     }
-
+    console.log('Diff data:', this.diff());
     const amount = this.form.getRawValue().amount.trim();
     try {
       const cents = parseAmountToCents(amount);
