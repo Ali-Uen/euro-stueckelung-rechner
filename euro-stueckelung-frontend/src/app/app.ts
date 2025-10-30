@@ -58,7 +58,6 @@ export class App {
       this.inputError.set('Bitte einen Betrag eingeben.');
       return;
     }
-    console.log('Diff data:', this.diff());
     const amount = this.form.getRawValue().amount.trim();
     try {
       const cents = parseAmountToCents(amount);
