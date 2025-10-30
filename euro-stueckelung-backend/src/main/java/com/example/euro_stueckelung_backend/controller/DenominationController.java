@@ -49,7 +49,7 @@ public class DenominationController {
             );
         }
 
-        List<DiffItem> diff = denominationService.computeDiff(previous, current);
+        List<DiffItem> diff = previous != null ? denominationService.computeDiff(previous, current) : List.of();
             return ResponseEntity.ok(DenominationResponse.from(current, diff));
         } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);

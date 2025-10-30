@@ -19,11 +19,11 @@ describe('DenominationService', () => {
 
   it('uses local strategy for frontend mode', async () => {
     const breakdown = makeBreakdown(100, 100, 1);
-    local.denominate.and.resolveTo(breakdown);
+    local.denominate.and.resolveTo({ breakdown, diff: [{ denomination: 100, delta: 1 }] });
 
     const result = await service.denominate(100);
 
-    expect(local.denominate).toHaveBeenCalledWith(100);
+    expect(local.denominate).toHaveBeenCalledWith(100, undefined);
     expect(result.breakdown).toEqual(breakdown);
     expect(result.diff).toEqual([{ denomination: 100, delta: 1 }]);
     expect(service.breakdown()).toEqual(breakdown);
@@ -33,11 +33,14 @@ describe('DenominationService', () => {
   it('keeps previous breakdown for diff calculation', async () => {
     const first = makeBreakdown(200, 200, 1);
     const second = makeBreakdown(100, 100, 1);
-    local.denominate.and.resolveTo(first);
+    local.denominate.and.resolveTo({ breakdown: first, diff: undefined });
 
     await service.denominate(200);
 
-    local.denominate.and.resolveTo(second);
+    local.denominate.and.resolveTo({ breakdown: second, diff: [
+      { denomination: 200, delta: -1 },
+      { denomination: 100, delta: 1 },
+    ] });
     const result = await service.denominate(100);
 
     expect(result.diff).toEqual([
@@ -53,7 +56,7 @@ describe('DenominationService', () => {
     await expectAsync(service.denominate(100)).toBeRejectedWithError('Backend unavailable');
 
     expect(local.denominate).not.toHaveBeenCalled();
-    expect(remote.denominate).toHaveBeenCalledWith(100);
+    expect(remote.denominate).toHaveBeenCalledWith(100, undefined);
     expect(service.error()).toBe('Backend unavailable');
   });
 });
