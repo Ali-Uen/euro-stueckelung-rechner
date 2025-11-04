@@ -1,0 +1,8 @@
+<mat-toolbar color="primary" class="app__header">
+  <span>Euro-Stückelung Rechner</span>
+  <span class="spacer"></span>
+  <mat-slide-toggle [checked]="darkMode" (change)="onToggle($event)">
+    <mat-icon>{{ darkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+  </mat-slide-toggle>
+  <mat-icon>calculate</mat-icon>
+</mat-toolbar>

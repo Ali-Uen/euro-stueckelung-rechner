@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.app__controls {
+  margin-bottom: 16px;
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.mode-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 16px 0;
+
+  mat-radio-button {
+    margin: 8px 0;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+
+  button {
+    flex: 1;
+  }
+}

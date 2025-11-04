@@ -1,13 +1,9 @@
 <main class="app">
-  <mat-toolbar color="primary" class="app__header">
-    <span>Euro-Stückelung Rechner</span>
-    <span class="spacer"></span>
-    <mat-slide-toggle [checked]="darkMode()" (change)="toggleDarkMode()">
-      <mat-icon>{{ darkMode() ? 'dark_mode' : 'light_mode' }}</mat-icon>
-    </mat-slide-toggle>
-    <mat-icon>calculate</mat-icon>
-  </mat-toolbar>
-  
+  <app-app-toolbar
+    [darkMode]="darkMode()"
+    (darkModeToggle)="toggleDarkMode($event)">
+  </app-app-toolbar>
+
   <mat-card class="app__description">
     <mat-card-content>
       <p>
@@ -16,103 +12,20 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="app__controls">
-    <mat-card-header>
-      <mat-card-title>Eingabe</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="submit()">
-          <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Betrag in Euro</mat-label>
-          <input
-          matInput
-            type="text"
-            formControlName="amount"
-            placeholder="z.&nbsp;B. 234,23"
-          />
-          <mat-error *ngIf="inputError()">{{ inputError() }}</mat-error>
-        </mat-form-field>
+  <app-amount-form
+    [form]="form"
+    [currentMode]="currentMode()"
+    [isProcessing]="isProcessing()"
+    [inputError]="inputError()"
+    [error]="error()"
+    (submitForm)="submit()"
+    (resetForm)="reset()"
+    (modeChange)="changeMode($event)">
+  </app-amount-form>
 
-        <mat-radio-group
-          class="mode-radio-group"
-          [value]="currentMode()"
-          (change)="changeMode($event.value)"
-        >
-          <mat-radio-button value="frontend">Frontend</mat-radio-button>
-          <mat-radio-button value="backend">Backend</mat-radio-button>
-        </mat-radio-group>
-
-      <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="isProcessing()">
-        <mat-icon>play_arrow</mat-icon>  
-        Berechnen
-      </button>
-        <button mat-stroked-button type="button"type="button" (click)="reset()">
-        <mat-icon>refresh</mat-icon>  
-          Zurücksetzen
-        </button>
-      </div>
-    </form>
-
-    <div class="status">
-      <mat-progress-bar mode="indeterminate" *ngIf="isProcessing()"></mat-progress-bar>
-      <mat-error *ngIf="inputError()">{{ inputError() }}</mat-error>
-      <mat-error *ngIf="error()">{{ error() }}</mat-error>
-    </div>
-    </mat-card-content>
-  </mat-card>
-
- <!-- Ergebnisse -->
-  <mat-card class="app__results" *ngIf="breakdown() || diff().length > 0">
-    <mat-card-header>
-      <mat-card-title>Ergebnisse</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="results-grid">
-        <!-- Neue Stückelung -->
-        <mat-card class="result-card">
-          <mat-card-header>
-            <mat-card-title>Neue Stückelung</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-              <table mat-table [dataSource]="breakdown()?.items || []" class="mat-elevation-z2">
-                <ng-container matColumnDef="denomination">
-                  <th mat-header-cell *matHeaderCellDef>Schein/Münze</th>
-                  <td mat-cell *matCellDef="let item">{{ formatEuro(item.denomination) }}</td>
-                </ng-container>
-              <ng-container matColumnDef="count">
-                  <th mat-header-cell *matHeaderCellDef>Anzahl</th>
-                  <td mat-cell *matCellDef="let item">{{ item.count }}</td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="['denomination', 'count']"></tr>
-                <tr mat-row *matRowDef="let row; columns: ['denomination', 'count'];"></tr>
-              </table>
-              <p *ngIf="!breakdown()">Noch keine Berechnung durchgeführt.</p>
-          </mat-card-content>
-        </mat-card>
-
-      <!-- Differenz zur vorherigen Ausgabe -->
-      <mat-card class="result-card">
-        <mat-card-header>
-          <mat-card-title>Differenz zur vorherigen Ausgabe</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <table mat-table [dataSource]="diff()" class="mat-elevation-z2">
-                <ng-container matColumnDef="denomination">
-                  <th mat-header-cell *matHeaderCellDef>Schein/Münze</th>
-                  <td mat-cell *matCellDef="let item">{{ formatEuro(item.denomination) }}</td>
-                </ng-container>
-                <ng-container matColumnDef="delta">
-                  <th mat-header-cell *matHeaderCellDef>Differenz</th>
-                  <td mat-cell *matCellDef="let item" [class]="item.delta > 0 ? 'positive' : item.delta < 0 ? 'negative' : ''">{{ item.delta > 0 ? '+' : '' }}{{ item.delta }}</td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="['denomination', 'delta']"></tr>
-                <tr mat-row *matRowDef="let row; columns: ['denomination', 'delta'];"></tr>
-          </table>
-          <p *ngIf="diff().length === 0">Keine Differenzen verfügbar.</p>
-        </mat-card-content>
-      </mat-card>
-      </div>
-    </mat-card-content>
-  </mat-card>
+  <app-results-panel
+    [breakdown]="breakdown()"
+    [diff]="diff()"
+    [formatEuro]="formatEuro">
+  </app-results-panel>
 </main>

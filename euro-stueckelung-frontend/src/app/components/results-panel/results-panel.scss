@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.app__results {
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 52px;
+  }
+}

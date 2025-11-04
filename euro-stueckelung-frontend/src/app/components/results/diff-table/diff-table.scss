@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.result-card {
+  table {
+    width: 100%;
+  }
+
+  .positive {
+    color: rgb(0, 255, 64);
+    font-weight: bold;
+  }
+
+  .negative {
+    color: rgb(255, 3, 3);
+    font-weight: bold;
+  }
+}

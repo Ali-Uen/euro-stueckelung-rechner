@@ -1,0 +1,44 @@
+<mat-card class="app__controls">
+  <mat-card-header>
+    <mat-card-title>Eingabe</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Betrag in Euro</mat-label>
+        <input
+        matInput
+          type="text"
+          formControlName="amount"
+          placeholder="z.&nbsp;B. 234,23"
+        />
+        <mat-error *ngIf="inputError">{{ inputError }}</mat-error>
+      </mat-form-field>
+
+      <mat-radio-group
+        class="mode-radio-group"
+        [value]="currentMode"
+        (change)="onModeChange($event)"
+      >
+        <mat-radio-button value="frontend">Frontend</mat-radio-button>
+        <mat-radio-button value="backend">Backend</mat-radio-button>
+      </mat-radio-group>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="isProcessing">
+      <mat-icon>play_arrow</mat-icon>  
+      Berechnen
+    </button>
+      <button mat-stroked-button type="button" (click)="onReset()">
+      <mat-icon>refresh</mat-icon>  
+        Zurücksetzen
+      </button>
+    </div>
+  </form>
+  <app-status-panel
+    [isProcessing]="isProcessing"
+    [inputError]="inputError"
+    [error]="error">
+  </app-status-panel>
+</mat-card-content>
+</mat-card>

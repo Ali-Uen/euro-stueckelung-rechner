@@ -1,26 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AmountForm } from './components/amount-form/amount-form';
+import { AppToolbar } from './components/app-toolbar/app-toolbar';
+import { ResultsPanel } from './components/results-panel/results-panel';
 import { CalculationMode, DenominationService } from './core/denomination.service';
-import { BreakdownItem, DiffItem, formatCentsToEuro, parseAmountToCents } from './core/money';
-
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { formatCentsToEuro, parseAmountToCents } from './core/money';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatTableModule } from '@angular/material/table';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatToolbarModule, MatCardModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatButtonModule, MatProgressBarModule, MatListModule, MatIconModule, MatChipsModule, MatTableModule, MatSlideToggleModule],
+  imports: [CommonModule, ReactiveFormsModule, MatCardModule, AppToolbar, AmountForm, ResultsPanel],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -44,9 +35,9 @@ export class App {
 
   protected readonly darkMode = signal(false);
 
-  protected toggleDarkMode(): void {
-    this.darkMode.set(!this.darkMode());
-    document.body.classList.toggle('dark-theme', this.darkMode());
+  protected toggleDarkMode(checked: boolean): void {
+    this.darkMode.set(checked);
+    document.body.classList.toggle('dark-theme', checked);
   }
 
   protected changeMode(mode: CalculationMode) {
@@ -73,9 +64,5 @@ export class App {
     this.form.reset();
     this.service.reset();
     this.inputError.set(null);
-  }
-
-  protected trackByDenomination(_: number, item: BreakdownItem | DiffItem): number {
-    return item.denomination;
   }
 }
