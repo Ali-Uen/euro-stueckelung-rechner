@@ -6,82 +6,16 @@
   max-width: 1920px;
   margin: 0 auto;
 
-  &__header {
-    justify-content: center;
-    font-size: 3em;
-    animation: fadeIn 1s ease-in;
-    mat-icon {
-      font-size: 0.65em;
-    }
-  }
   &__description {
-    text-align: center;
-    margin-bottom: 16px;
-    font-size: 1.5em;
+    text-align:center;
+    margin-bottom:16px;
+    font-size:1.5em;
     animation: fadeIn 1s ease-in;
   }
-  &__controls {
-    margin-bottom: 16px;
-
-    .full-width {
-      width: 100%;
-      margin-top: 16px;
-    }
-
-    .mode-radio-group {
-      display: flex;
-      flex-direction: column;
-      margin: 16px 0;
-
-      mat-radio-button {
-        margin: 8px 0;
-      }
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 16px;
-      margin-top: 16px;
-
-      button {
-        flex: 1;
-      }
-    }
-
-    .status {
-      margin-top: 16px;
-    }
-  }
-  &__results {
-    .results-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 52px;
-    }
-
-    .result-card {
-      table {
-        width: 100%;
-      }
-
-      .positive {
-        color: rgb(0, 255, 64);
-        font-weight: bold;
-      }
-
-      .negative {
-        color: rgb(255, 3, 3);
-        font-weight: bold;
-      }
-    }
-  }
+}
 
 .mat-mdc-card {
   margin-bottom: 16px;
-}
-
-.spacer {
-  flex: 1 1 auto;
 }
 
 @keyframes fadeIn {
@@ -91,5 +25,4 @@
   to {
     opacity: 1;
   }
-}
 }

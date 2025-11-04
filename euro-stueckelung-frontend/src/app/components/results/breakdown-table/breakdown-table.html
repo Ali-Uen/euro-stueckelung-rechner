@@ -1,0 +1,20 @@
+<mat-card class="result-card">
+  <mat-card-header>
+    <mat-card-title>Neue Stückelung</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+      <table mat-table [dataSource]="items" class="mat-elevation-z2">
+        <ng-container matColumnDef="denomination">
+          <th mat-header-cell *matHeaderCellDef>Schein/Münze</th>
+          <td mat-cell *matCellDef="let item">{{ formatEuro(item.denomination) }}</td>
+        </ng-container>
+      <ng-container matColumnDef="count">
+          <th mat-header-cell *matHeaderCellDef>Anzahl</th>
+          <td mat-cell *matCellDef="let item">{{ item.count }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <p *ngIf="!breakdown">Noch keine Berechnung durchgeführt.</p>
+  </mat-card-content>
+</mat-card>

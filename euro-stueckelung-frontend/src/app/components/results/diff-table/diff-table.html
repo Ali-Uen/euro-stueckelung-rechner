@@ -1,0 +1,20 @@
+<mat-card class="result-card">
+  <mat-card-header>
+    <mat-card-title>Differenz zur vorherigen Ausgabe</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="diff" class="mat-elevation-z2">
+          <ng-container matColumnDef="denomination">
+            <th mat-header-cell *matHeaderCellDef>Schein/Münze</th>
+            <td mat-cell *matCellDef="let item">{{ formatEuro(item.denomination) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="delta">
+            <th mat-header-cell *matHeaderCellDef>Differenz</th>
+            <td mat-cell *matCellDef="let item" [class]="item.delta > 0 ? 'positive' : item.delta < 0 ? 'negative' : ''">{{ item.delta > 0 ? '+' : '' }}{{ item.delta }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <p *ngIf="diff.length === 0">Keine Differenzen verfügbar.</p>
+  </mat-card-content>
+</mat-card>

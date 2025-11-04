@@ -1,0 +1,5 @@
+<div class="status">
+  <mat-progress-bar mode="indeterminate" *ngIf="isProcessing"></mat-progress-bar>
+  <mat-error *ngIf="inputError">{{ inputError }}</mat-error>
+  <mat-error *ngIf="error">{{ error }}</mat-error>
+</div>

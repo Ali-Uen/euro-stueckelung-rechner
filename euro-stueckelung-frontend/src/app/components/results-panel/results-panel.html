@@ -1,0 +1,17 @@
+<mat-card class="app__results" *ngIf="hasResults">
+  <mat-card-header>
+    <mat-card-title>Ergebnisse</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="results-grid">
+      <app-breakdown-table
+        [breakdown]="breakdown"
+        [formatEuro]="formatEuro">
+      </app-breakdown-table>
+      <app-diff-table
+        [diff]="diff"
+        [formatEuro]="formatEuro">
+      </app-diff-table>
+    </div>
+  </mat-card-content>
+</mat-card>

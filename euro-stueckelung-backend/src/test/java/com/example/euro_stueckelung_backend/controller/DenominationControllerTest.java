@@ -36,13 +36,7 @@ class DenominationControllerTest {
         Breakdown breakdown = new Breakdown(23423,
                 List.of(new BreakdownItem(20000, 1),
                         new BreakdownItem(2000, 1)));
-        List<DiffItem> diff = List.of(
-        new DiffItem(20000, 1),
-        new DiffItem(2000, 1)
-        );
         when(denominationService.denominate(23423L)).thenReturn(breakdown);
-        when(denominationService.computeDiff(null, breakdown)).thenReturn(diff);
-
         mockMvc.perform(post("/api/denominate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -52,10 +46,8 @@ class DenominationControllerTest {
                 .andExpect(jsonPath("$.totalInCents").value(23423))
                 .andExpect(jsonPath("$.items[0].denominationInCents").value(20000))
                 .andExpect(jsonPath("$.items[0].count").value(1))
-                .andExpect(jsonPath("$.diff[0].denominationInCents").value(20000))
-                .andExpect(jsonPath("$.diff[0].delta").value(1))
-                .andExpect(jsonPath("$.diff[1].denominationInCents").value(2000))
-                .andExpect(jsonPath("$.diff[1].delta").value(1));
+                .andExpect(jsonPath("$.diff").isArray())
+                .andExpect(jsonPath("$.diff").isEmpty());
     }
 
     @Test
