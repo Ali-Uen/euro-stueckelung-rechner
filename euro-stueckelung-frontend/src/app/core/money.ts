@@ -78,10 +78,6 @@ export function computeDiff(previous: Breakdown | null, current: Breakdown): Dif
   const registry = new Map<EuroDenomination, number>();
   const used = new Set<EuroDenomination>();
 
-  for (const denomination of EURO_DENOMINATIONS) {
-    registry.set(denomination, 0);
-  }
-
   if (previous) {
     for (const item of previous.items) {
       used.add(item.denomination);
