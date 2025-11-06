@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -91,32 +92,18 @@ public class DenominationService {
     }
 
     public List<DiffItem> computeDiff(Breakdown previous, Breakdown current) {
-        if (current == null) {
-            throw new IllegalArgumentException("current breakdown must not be null");
-        }
+        Objects.requireNonNull(current, "current breakdown must not be null");
+        Map<Integer, Integer> deltas = Arrays.stream(EURO_DENOMINATIONS)
+                .boxed()
+                .collect(LinkedHashMap::new, (map, denom) -> map.put(denom, 0), Map::putAll);
+        Set<Integer> touched = new HashSet<>();
 
-        Map<Integer, Integer> registry = new LinkedHashMap<>();
-        Set<Integer> used = new HashSet<>();
-
-        for (int denomination : EURO_DENOMINATIONS) {
-            registry.put(denomination, 0);
-        }
-
-        if (previous != null) {
-            for (BreakdownItem item : previous.items()) {
-                used.add(item.denominationInCents());
-                registry.compute(item.denominationInCents(), (d, val) -> (val == null ? 0 : val) - item.count());
-            }
-        }
-
-        for (BreakdownItem item : current.items()) {
-            used.add(item.denominationInCents());
-            registry.compute(item.denominationInCents(), (d, val) -> (val == null ? 0 : val) + item.count());
-        }
+        apply(deltas, previous, -1, touched);
+        apply(deltas, current, 1, touched);
 
         return Arrays.stream(EURO_DENOMINATIONS)
-                .mapToObj(denom -> new DiffItem(denom, registry.get(denom)))
-                .filter(diff -> used.contains(diff.denominationInCents()))
+                .filter(touched::contains)
+                .mapToObj(denom -> new DiffItem(denom, deltas.get(denom)))
                 .toList();
     }
 
@@ -126,6 +113,19 @@ public class DenominationService {
         }
         if (totalInCents > MAX_SUPPORTED_AMOUNT_IN_CENTS) {
             throw new IllegalArgumentException("Betrag ist zu groß.");
+        }
+    }
+    private void apply(Map<Integer, Integer> deltas,
+                   Breakdown breakdown,
+                   int direction,
+                    Set<Integer> touched) {
+        if (breakdown == null) {
+            return;
+        }
+        for (BreakdownItem item : breakdown.items()) {
+            int denom = item.denominationInCents();
+            touched.add(denom);
+            deltas.computeIfPresent(denom, (d, value) -> value + direction * item.count());
         }
     }
 }
